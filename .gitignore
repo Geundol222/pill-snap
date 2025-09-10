@@ -69,11 +69,6 @@ cache/
 cache/
 labels.cache
 
-===== 제출물 =====
-submissions/.csv
-!submissions/.gitkeep
-!submissions/README.md
-
 ===== 환경변수/비밀키 =====
 .env
 .env.*
@@ -85,3 +80,4 @@ kaggle.json
 ===== Colab 흔적(있을 때만) =====
 content/
 drive/
+
