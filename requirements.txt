@@ -1,0 +1,24 @@
+# 필수 분석/데이터 처리
+numpy==2.0.2
+pandas==2.2.2
+matplotlib==3.10.0
+seaborn==0.13.2
+scikit-learn==1.6.1
+tqdm==4.67.1
+ultralytics==8.3.197
+
+# 이미지 처리/증강
+albumentations==2.0.8
+scikit-image==0.25.2
+tqdm==4.67.1
+
+# === PyTorch 설치 ===
+# torch는 requirements에서 제외 (환경마다 CUDA 버전이 달라서 각자 설치 필요)
+# GPU CUDA 버전 확인법:
+# 	터미널/명령어창에서 nvidia-smi 실행 → CUDA Version 확인
+# 설치 명령어 (자신의 GPU에 맞게 cuXXX 선택):
+# 	pip install torch==2.8.0 torchvision==0.23.0 torchaudio==2.8.0 --index-url https://download.pytorch.org/whl/cu128
+
+# Kaggle 연동
+kaggle==1.7.4.5
+kagglehub==0.3.13
