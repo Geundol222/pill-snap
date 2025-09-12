@@ -19,7 +19,7 @@ def validation_score():
     )
 
     ap_75_95 = metrics.box.all_ap[:, 5:].mean()
-    print("mAP@[0.75:0.95] :", ap_75_95)
+    print(f'mAP@[0.75:0.95] : {ap_75_95:.2f}')
 
 def test_loop():
     model = YOLO('../../runs/detect/train/weights/best.pt')
@@ -62,9 +62,12 @@ def main():
             name="v12_train",   # 해당 작업이 어떤 작업인지를 명시해서 폴더링할 수도 있습니다. 이 기능은 사용자의 선택이지만, 기본적으로 train, val, predict의 폴더가 작업마다 생성되므로 꼭 필요한 파라미터는 아닙니다.
             exist_ok=True       # 이미 폴더가 있어도 덮어쓰기 허용
         )
+
+    results:
+        - [LHS] 전처리와 EDA 없이 Validataion mAP@[0.75:0.95] : 0.7997302769703274 -> 0.8
     """
 
-    model = YOLO('yolov12s.pt')
+    model = YOLO('yolo12s.pt')
 
     model.train(
         data='../../configs/yolo_data.yaml',
