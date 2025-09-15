@@ -12,6 +12,7 @@ torchmetrics==1.8.2
 # 이미지 처리/증강
 albumentations==2.0.8
 scikit-image==0.25.2
+pillow==11.3.0
 tqdm==4.67.1
 
 # === PyTorch 설치 ===
