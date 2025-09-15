@@ -1,0 +1,85 @@
+===== OS / IDE =====
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/
+*.code-workspace
+
+===== Python 기본 =====
+pycache/
+*.py[cod]
+*$py.class
+.python-version
+.venv/
+venv/
+env/
+pip-wheel-metadata/
+.egg-info/
+.eggs/
+build/
+dist/
+
+===== 테스트/정적분석 캐시 =====
+.pytest_cache/
+.coverage
+.coverage.
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.tox/
+.nox/
+
+===== 노트북 =====
+.ipynb_checkpoints/
+
+===== 데이터/대용량 아티팩트 =====
+data/
+datasets/
+data_yolo/
+!data/README.md            # 데이터 설명만 추적(선택)
+!data/samples/**           # 샘플 소량만 추적하고 싶을 때(선택)
+*.zip
+*.tar
+*.tar.gz
+*.7z
+
+===== 모델/학습 산출물 =====
+checkpoints/
+weights/
+runs/
+outputs/
+logs/
+tensorboard/
+lightning_logs/
+wandb/
+mlruns/
+mlartifacts/
+v12_runs/
+*.pt
+*.ckpt
+*.onnx
+*.engine
+*.tflite
+*.npz
+*.bin
+
+===== 캐시/임시 =====
+*.cache
+cache/
+cache/
+labels.cache
+
+===== 환경변수/비밀키 =====
+.env
+.env.*
+.kaggle/
+kaggle.json
+*.key
+*.pem
+
+===== Colab 흔적(있을 때만) =====
+content/
+drive/
+
