@@ -1,5 +1,6 @@
 import os
-import random
+import json
+import yaml
 
 
 import matplotlib.pyplot as plt
@@ -26,6 +27,7 @@ def validation_score():
     ap_75_95 = metrics.box.all_ap[:, 5:].mean()
     print(f'mAP@[0.75:0.95] : {ap_75_95:.2f}')
 
+
 def test_loop():
     model = YOLO('v12_runs/train/weights/best.pt')
 
@@ -43,32 +45,38 @@ def test_loop():
 
     save_csv()
 
+
 def save_csv():
-    pred_dir = "v12_runs/predict/labels"  # YOLO predict 결과 라벨 폴더
-    img_dir = "../../data/test_images"    # 원본 이미지 폴더
+    pred_dir = "v12_runs/predict/labels"
+    img_dir = "../../data/test_images"
     out_csv = "../../submissions/submission.csv"
 
     rows = []
     annotation_id = 1
 
+    # 🔑 매핑 불러오기
+    class_map = load_class_map()
+
     for label_file in os.listdir(pred_dir):
         if not label_file.endswith(".txt"):
             continue
 
-        image_id = os.path.splitext(label_file)[0]   # ex) "1"
-        img_path = os.path.join(img_dir, image_id + ".png")  # 확장자 맞춰 수정 (.jpg면 jpg로)
+        image_id = os.path.splitext(label_file)[0]   # "1"
+        img_path = os.path.join(img_dir, image_id + ".png")
         if not os.path.exists(img_path):
             img_path = os.path.join(img_dir, image_id + ".jpg")
 
-        # 이미지 크기
         with Image.open(img_path) as im:
             W, H = im.size
 
         with open(os.path.join(pred_dir, label_file)) as f:
             for line in f.readlines():
-                cls, x, y, w, h, conf = map(float, line.strip().split())
+                parts = line.strip().split()
+                if len(parts) == 6:
+                    cls, x, y, w, h, conf = map(float, parts)
+                else:
+                    continue  # conf 없는 라인 무시
 
-                # YOLO normalized → COCO style
                 x_min = (x - w/2) * W
                 y_min = (y - h/2) * H
                 box_w = w * W
@@ -77,7 +85,7 @@ def save_csv():
                 rows.append([
                     annotation_id,
                     int(image_id),
-                    int(cls),
+                    class_map[int(cls)],   # 🔑 여기서 변환
                     int(x_min),
                     int(y_min),
                     int(box_w),
@@ -86,13 +94,43 @@ def save_csv():
                 ])
                 annotation_id += 1
 
-    # DataFrame 저장
     df = pd.DataFrame(rows, columns=[
         "annotation_id", "image_id", "category_id",
         "bbox_x", "bbox_y", "bbox_w", "bbox_h", "score"
     ])
     df.to_csv(out_csv, index=False)
     print(f"Saved: {out_csv}")
+
+
+def load_class_map():
+    anno_dir = "../../data/train_annotations"
+    name2id = {}
+
+    # 하위 모든 폴더 순회
+    for root, dirs, files in os.walk(anno_dir):
+        for file in files:
+            if not file.endswith(".json"):
+                continue
+            with open(os.path.join(root, file), "r", encoding="utf-8") as f:
+                data = json.load(f)
+                if "categories" in data:
+                    for cat in data["categories"]:
+                        name2id[cat["name"].strip()] = cat["id"]
+
+    # yolo_data.yaml 불러오기
+    with open("../../configs/yolo_data.yaml", "r", encoding="utf-8") as f:
+        yolo_cfg = yaml.safe_load(f)
+    names = [n.strip() for n in yolo_cfg["names"]]
+
+    # YOLO 인덱스 → 실제 category_id 매핑
+    class_map = {}
+    for i, name in enumerate(names):
+        if name not in name2id:
+            raise KeyError(f"⚠️ '{name}' 가 JSON categories에 없음")
+        class_map[i] = name2id[name]
+
+    return class_map
+
 
 def main():
     """
