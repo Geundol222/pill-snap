@@ -7,10 +7,12 @@ scikit-learn==1.6.1
 tqdm==4.67.1
 ultralytics==8.3.198
 nbimport==0.0.0     # ipynb에 있는 변수나 함수를 가져올 수 있는 라이브러리
+torchmetrics==1.8.2
 
 # 이미지 처리/증강
 albumentations==2.0.8
 scikit-image==0.25.2
+pillow==11.3.0
 tqdm==4.67.1
 
 # === PyTorch 설치 ===
