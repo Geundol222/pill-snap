@@ -1,10 +1,80 @@
+# PillDataset하면서 추가된 import문
+import os
+import json
+from PIL import Image
+
+# DataLoader는 기존에있었고 Dataset이 새로 추가됨
+from torch.utils.data import DataLoader, Dataset
+
+# ResNet할때 추가한 import문
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import torchvision
 import torchvision.transforms as transforms
-from torch.utils.data import DataLoader
-# 이 주석 지울것 여기는 getcifar을 이용한 ResNet18 학습 예제
+# 이것은 getcifar대신 다운받은 약 데이터를 이용한 실습
+
+"""
+아직 미완성, getcifar 대신 다운받은 이미지폴더들을 받아서 해야하는데
+Json파일을 읽어서 이미지파일과 어노테이션을 매칭하는 부분이 필요하고
+이미지파일이 실제로 존재하는지 확인하는 부분도 필요
+경로도 가끔 문제가 생겨서 여기도 확인필요
+"""
+class PillDataset(Dataset):
+    def __init__(self, img_dir, ann_dir, transform=None):
+        """
+        img_dir: 이미지 폴더 경로(train_images, test_images)
+        ann_dir: JSON annotation 폴더 경로
+        transform: 이미지 변환(torchvision.transforms)
+        """
+        self.img_dir = img_dir
+        self.transform = transform
+        self.image_info = {}
+        self.annotations_info = {}
+
+        #ann_dir 안의 모든 json 파일 읽기
+        for root, _, files in os.walk(ann_dir):
+            for file in files:
+                if file.endswith(".json"):
+                    json_path = os.path.join(root, file)
+                    with open(json_path, "r", encoding="utf-8") as f:
+                        ann = json.load(f)
+
+                    for img in ann["images"]:
+                        img_id = img["id"]
+                        self.image_info[img_id] = img
+                    
+                    for a in ann["annotations"]:
+                        img_id = a["image_id"]
+                        if img_id not in self.annotations_info:
+                            self.annotations_info[img_id] = []
+                        self.annotations_info[img_id].append(a)
+        
+        # 이미지 파일이 실제로 존재하는지 확인하여 image_info 필터링
+        self.image_info = {k: v for k, v in self.image_info.items()
+                           if os.path.exists(os.path.join(self.img_dir, v["file_name"]))}
+        
+
+    def __len__(self):
+        return len(self.image_info)
+    
+    def __getitem__(self, idx):
+        img_id = list(self.image_info.keys())[idx]
+        img_data = self.image_info[img_id]
+        img_path = os.path.join(self.img_dir, img_data["file_name"])
+
+        # 이미지 로드
+        image = Image.open(img_path).convert("RGB")
+
+        # 어노테이션 로드 (단일 label 분류만 예시)
+        anns = self.annotations_info.get(img_id, [])
+        labels = [ann["category_id"] for ann in anns]
+        # 여러개의 알약이 있을 수 있으므로 우선 첫 번째만 사용(단순 분류용)
+        label = labels[0] if len(labels) > 0 else 0  # 기본값 0
+
+        if self.transform: image = self.transform(image)
+
+        return image, label
+
 """
 ResNet 구현
 Class BasicBlock           # ResNet-18, 34용 블록
@@ -16,12 +86,6 @@ def resnet18~resnet152     # 모델 빌더 함수
 from resnetSSD import resnet18, resnet50
 
 model = resnet18(num_classes=10)  # CIFAR-10 예제
-"""
-
-"""
-getcifar을 이용한 ResNet18 학습 예제이며 epoch까지 되는건 확인테스트
-여기는 .py들을 나누지않고 하나에 다 넣은 하나의.py 형태
-각 기능별로 나누어진 .py들은 각각 data.py, train.py, test.py, models/resnetSSD.py, main.py
 """
 # ResNet-18, 34에서 사용하는 블록 (50층이하)
 class BasicBlock(nn.Module):
@@ -224,45 +288,7 @@ def resnet152(num_classes=1000):
     return ResNet(Bottleneck, [3, 8, 36, 3], num_classes)
 # 여기까지가 resnetSSD.py
 
-
-def get_cifar10_dataloaders(batch_size=128, num_workers=2):
-    """
-    데이터 전처리 
-    CIFAR-10 데이터셋용 DataLoader 생성 함수
-
-    batch_size: 학습 배치 크기 (기본값 128)
-    num_workers: 데이터 로딩 시 사용하는 서브 프로세스 수 (기본값 2)
-    
-    train_loader: 학습용 DataLoader
-    test_loader: 테스트용 DataLoader
-    """
-    # 학습 데이터 전처리
-    transform_train = transforms.Compose([
-        transforms.RandomCrop(32, padding=4),   # 32x32 이미지 랜덤 Crop, 패딩 4픽셀 추가 → 데이터 증강
-        transforms.RandomHorizontalFlip(),      # 좌우 반전 → 데이터 다양성 증가
-        transforms.ToTensor(),                  # PIL Image → Tensor 변환
-        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)), # 채널별 평균값, 표준편차
-        ])
-    
-    # 테스트 데이터 전처리
-    transform_test = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-        ])
-    
-    # CIFAR-10 데이터셋 다운로드 및 생성
-    train_dataset = torchvision.datasets.CIFAR10(root="./data", train=True, download=True, transform=transform_train)
-    test_dataset  = torchvision.datasets.CIFAR10(root="./data", train=False, download=True, transform=transform_test)
-    
-    # DataLoader 생성
-    # 학습용 DataLoader, shuffle=True로 매 epoch마다 데이터 섞기
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
-    # 테스트용 DataLoader, shuffle=False로 순서 유지
-    test_loader  = DataLoader(test_dataset, batch_size=100, shuffle=False, num_workers=2)
-    
-    return train_loader, test_loader
-# 여기까지가 data.py
-
+# data.py는 일단 삭제(getcifar)후 main.py에 복사
 
 def train_one_epoch(model, train_loader, criterion, optimizer, device, epoch):
     """
@@ -348,29 +374,63 @@ if __name__ == "__main__":
 
     # 모델 선택 (예: ResNet-18)
     # GPU가 사용 가능하면 'cuda', 없으면 'cpu'를 사용
+    # AMD는??? directML설치하던가 Ubuntu를 써야함
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    # 데이터
-    # get_cifar10_dataloaders 함수를 호출하여 CIFAR-10 데이터셋 로딩
-    # batch_size=128로 학습 데이터를 한 번에 128개씩 가져옴
-    train_loader, test_loader = get_cifar10_dataloaders(batch_size=128)
+    # 이미지 전처리 (CIFAR-10은 32x32이지만 ResNet은 224x224 입력을 기대하므로 크기 조정)
+    transform = transforms.Compose([
+        transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+    ])
+
+    # JSON 파일 경로 탐색
+    ann_dir = "C:/Users/오연배/Desktop/AI_BasicProject/pill-snap/src/train_model/train_annotations"
+    json_files = []
+    for root, dirs, files in os.walk(ann_dir):
+        for f in files:
+            if f.endswith(".json"):
+                json_files.append(os.path.join(root, f))
+
+    if len(json_files) == 0:
+        raise FileNotFoundError("JSON 파일을 찾을 수 없습니다.")
+
+    # 첫 번째 JSON 파일 열기
+    with open(json_files[0], "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    # 클래스 수 계산
+    num_classes = len({c["id"] for c in data["categories"]})
+    print("클래스 수:", num_classes)
+
+    # Dataset 경로
+    train_dataset = PillDataset(img_dir="C:/Users/오연배/Desktop/AI_BasicProject/pill-snap/src/train_model/train_images", 
+                                ann_dir="C:/Users/오연배/Desktop/AI_BasicProject/pill-snap/src/train_model/train_annotations", 
+                                transform=transform)
+    test_dataset = PillDataset(img_dir="C:/Users/오연배/Desktop/AI_BasicProject/pill-snap/src/train_model/test_images", 
+                               ann_dir="C:/Users/오연배/Desktop/AI_BasicProject/pill-snap/src/train_model/train_annotations", 
+                               transform=transform)
+
+    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=2)
+    test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False, num_workers=2)
+
 
     # 모델
-    # ResNet-18 모델 생성, CIFAR-10은 클래스 수가 10
+    # ResNet-18 모델 생성
     # to(device)를 통해 GPU 또는 CPU에 모델을 올림
-    model = resnet18(num_classes=10).to(device)
+    model = resnet18(num_classes=num_classes).to(device)
 
     # 손실함수 & 옵티마이저
     # CrossEntropyLoss: 분류 문제에 적합한 손실 함수
     criterion = nn.CrossEntropyLoss()
     # SGD: 확률적 경사 하강법, momentum=0.9, 가중치 감쇠(weight decay)=5e-4
-    optimizer = optim.SGD(model.parameters(), lr=0.1, momentum=0.9, weight_decay=5e-4)
+    optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=5e-4)
     # StepLR: 일정 epoch마다 learning rate를 gamma만큼 감소
-    scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
+    scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
 
     # 학습 루프
-    num_epochs = 50 # 총 학습 epoch 수 50
-    for epoch in range(1, num_epochs+1):
+    num_epochs = 10 # 총 학습 epoch 수 10
+    for epoch in range(1, num_epochs + 1):
         train_one_epoch(model, train_loader, criterion, optimizer, device, epoch)   # 한 epoch 동안 학습 수행
         test_one_epoch(model, test_loader, criterion, device, epoch)               # 한 epoch 동안 테스트 수행
         scheduler.step()        # 스케줄러로 learning rate 조정
