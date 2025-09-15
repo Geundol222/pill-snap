@@ -175,9 +175,7 @@ def main():
         imgsz=960,  # 640
         batch=4,    # 16
         nbs=16,     # nbs: 배치는 4인데 16의 효과를 주기위해 epoch마다 backward하는게 아니라 4번마다 한번 한다
-        hsv_h=0.1,  # 랜덤 색조
-        hsv_s=0.5,  # 랜덤 채도
-        hsv_v=0.3,  # 랜덤 밝기
+        auto_augment='randaugment', # 'randaugment'는 기본값 'autoaugment'또는 'augmix'
         device=0,
         project="v12_runs",
         seed=42,
