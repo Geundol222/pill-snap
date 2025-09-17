@@ -106,7 +106,7 @@ pill-snap/
 ## 📅 프로젝트 진행 과정
 
 ### 🔹 1주차 – 모델 선정
-- **적용 모델**: FasterRCNN, ResNetSSD, VGGSSD, RetinaNet, YOLOv8  
+- **적용 모델**: Faster R-CNN, ResNet-SSD, VGG-SSD, RetinaNet, YOLOv8  
 - **mAP 결과**:  
   - ⚠️ FasterRCNN: 오류로 측정 불가  
   - ⚠️ ResNetSSD: 오류로 측정 불가  
@@ -130,14 +130,14 @@ pill-snap/
     
 - auto_augment 실험
   - **AutoAugment**
-      - 주요 augmentation: ***[shear, translate, rotate, auto_contrast, equlize, solarize, posterize, contrast, color, brightness, sharpness, invert, cutout, samplepairing]***
+      - 주요 augmentation: ***[shear, translate, rotate, auto_contrast, equalize, solarize, posterize, contrast, color, brightness, sharpness, invert, cutout, samplepairing]***
       - 각 연산은 probability와 magnitude를 가짐
       - RL 기반 탐색으로 가장 좋은 조합을 찾아 자동으로 적용됨
       - 위의 augmentation이 전부 진행되는 것이 아니며, 데이터 셋에 따라 **성능이 좋은 조합**을 찾아서 적용되는 것
   - **RandAugment**
       - 주요 augmentation: autoaugment와 유사
       - autoaugment와의 차이점은 N개의 연산을 랜덤으로 선택하고 모든 연산에 대해 동일한 강도를 적용하여 augmentation 진행
-      - autoaugment의 경우 가장 좋은 조합을 찾기 위해 탐색과정이 필요하여 시간이 오래걸리지만, randaugmentation은 이 부분을 개선하여 매번 랜덤한 연산을 진행
+      - autoaugment의 경우 가장 좋은 조합을 찾기 위해 탐색과정이 필요하여 시간이 오래걸리지만, RandAugment 이 부분을 개선하여 매번 랜덤한 연산을 진행
   - **AugMix**
       - 주요 augmentation: 위의 두 방법론과 유사
       - 여러 augmentation chain을 무작위로 생성
@@ -167,7 +167,7 @@ pill-snap/
 - 예시 prediction Image:
 ![517](https://github.com/user-attachments/assets/0f60cc09-e990-487d-8427-44724d0597d3)
 
-### 🔧 BBOX 겹침 문제 해결 실험
+### 🔧 bbox 겹침 문제 해결 실험
 - 사용모델: YOLOv12
 - 전처리: [Image resize(960), bbox 겹침 문제 수동 라벨링]
 - 결과(Kaggle Leaderboard): **0.968**
@@ -185,7 +185,7 @@ pill-snap/
 | 실험 내용           | Kaggle 점수 |
 | --------------- | --------- |
 | BaseLine        | **0.965** |
-| BBox 겹침 해결   | **0.968** |
+| bbox 겹침 해결   | **0.968** |
 | Pseudo-Labeling | **0.976** |
 
 ## 📝 결론 및 향후계획
