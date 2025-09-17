@@ -46,7 +46,7 @@
 
 1. **프로젝트 다운로드**
 ```bash
-git clone <repository-url>
+git clone https://github.com/Geundol222/pill-snap.git
 ```
 
 2. **가상환경 생성 (권장)**
