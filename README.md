@@ -182,6 +182,7 @@ pill-snap/
 - EDA가 진행중에 있으므로 필요한 문제를 더 찾아 개선하고, 모델도 성능개선이 가능한 하이퍼파라미터 탐색 예정
 - pseudo-labeling으로 진행된 annotation의 bbox 보정 방안 모색 및 보정 진행 예정
 
+---
 
 ## 참고자료
 - [Ultralytics](https://docs.ultralytics.com/ko/modes/train/#introduction)
