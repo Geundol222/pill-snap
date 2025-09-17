@@ -9,7 +9,6 @@
   <a href="#-실험-내용-및-결과">결과</a> •
   <a href="#-용어-정리">용어</a> •
   <a href="#-결론-및-향후계획">향후</a> •
-  <a href="#-environment--reproducibility">환경/재현</a> •
   <a href="#-참고자료">참고</a>
 </p>
 
