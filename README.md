@@ -112,7 +112,7 @@ pill-snap/
                  - 각 augmentation 실험은 유의미한 mAP 증가 효과를 볼 수 없었으며, 공식문서를 찾아본 결과 auto_augment라는 옵션을 통해 자동으로 augmentation이 적용되기 때문에 수동으로 augmentation을 지정하여 실험하는 것은 의미가 없다고 판단, auto_augment의 옵션에 대한 실험을 진행해보기로 함
         - auto_augment 실험
             - **AutoAugment**
-                - 주요 augmentation: ***shear, translate, rotate, auto_contrast, equlize, solarize, posterize, contrast, color, brightness, sharpness, invert, cutout, samplepairing***
+                - 주요 augmentation: ***[shear, translate, rotate, auto_contrast, equlize, solarize, posterize, contrast, color, brightness, sharpness, invert, cutout, samplepairing]***
                 - 각 연산은 probability와 magnitude를 가짐
                 - RL 기반 탐색으로 가장 좋은 조합을 찾아 자동으로 적용됨
                 - 위의 augmentation이 전부 진행되는 것이 아니며, 데이터 셋에 따라 **성능이 좋은 조합**을 찾아서 적용되는 것
@@ -124,7 +124,18 @@ pill-snap/
                 - 주요 augmentation: 위의 두 방법론과 유사
                 - 여러 augmentation chain을 무작위로 생성
                 - chain들을 합성(Dirichlet 분포 기반 가중치) 후 원본 이미지와 섞음
-                - Consistency loss를 통해 원본/증강본이 비슷한 embedding을 갖도록 학습
+                - 원본/증강본이 비슷한 embedding을 갖도록 학습
+            - **용어 정리**
+                - RL(Reinforcement Learning, 강화학습) 기반 탐색:
+                    - 강화학습 기반 탐색
+                    - 에이전트가 성능이 괜찮아 보이는 augmentation 조합을 제안 => 모델 학습 후 reward를 통해 성능점수를 주는 방법을 진행
+                    - 에이전트는 성능이 좋은 정책을 자주 뽑도록 학습함
+                - Didichel 분포 기반 가중치:
+                    - 여러 값이 동시에 확률(합=1)이 되도록 만드는 분포
+                    - 예: chain이 3개가 존재한다면 [0.2, 0.5, 0.3]과 같이 합이 1이되는 비율을 랜덤하게 선정
+                    - 각 chain이 섞이는 비율이 매번 달라지며, 데이터의 다양성이 증가되는 효과
+                - 원본/증강본이 비슷한 embedding을 갖도록 학습:
+                    - 원본 이미지와 증강본은 같은 클래스이므로, 모델이 출력하는 embedding이 비슷해지도록 추가적인 손실함수(Consistency Loss)사용
             - **실험결과**:
                 - 세 옵션에 대해 mAP와 리더보드에 **큰 점수차이 없음**, 따라서 가장 빠른 **RandAugment를 적용**
 ---
