@@ -3,7 +3,7 @@
 ## 📌 개요
 - **주제**: 알약 이미지 객체 검출(Object Detection)
 - **목표**: 정확한 약제 식별 및 YOLOv8 vs YOLOv12 성능 비교
-- **데이터**: [Ai Hub 경구약제 이미지 데이터](https://aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&dataSetSn=576)
+- **데이터(원본)**: [Ai Hub 경구약제 이미지 데이터 中 일부 (가공데이터는 private)](https://aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&dataSetSn=576)
   
 ---
 
