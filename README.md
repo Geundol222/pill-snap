@@ -179,4 +179,12 @@ pill-snap/
 ### 향후계획
 - 현재 YOLOv8의 경우 카테고리id가 매치 되지 않는 등 문제가 발생하여 리더보드 점수가 찍히지 않고 있음
 - 빠른 개선을 통해 원래의 목적이었던 v8과 v12의 성능 차이를 확인할 수 있게 진행예정
-- EDA가 진행중에 있으므로 필요한 문제를 더 찾아 개선하고, 모델도 성능개선이 가능한 하이퍼파라미터 탐색 예정 
+- EDA가 진행중에 있으므로 필요한 문제를 더 찾아 개선하고, 모델도 성능개선이 가능한 하이퍼파라미터 탐색 예정
+- pseudo-labeling으로 진행된 annotation의 bbox 보정 방안 모색 및 보정 진행 예정
+
+
+## 참고자료
+- (Ultralytics)[https://docs.ultralytics.com/ko/modes/train/#introduction]
+- (AutoAugment: Learning Augmentation Policies from Data)[https://arxiv.org/abs/1805.09501]
+- (RandAugment: Practical automated data augmentation with a reduced search space)[https://arxiv.org/abs/1909.13719]
+- (AugMix: A Simple Data Processing Method to Improve Robustness and Uncertainty)[https://arxiv.org/abs/1912.02781]
