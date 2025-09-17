@@ -3,7 +3,8 @@
 ## 📌 개요
 - **주제**: 알약 이미지 객체 검출(Object Detection)
 - **목표**: 정확한 약제 식별 및 YOLOv8 vs YOLOv12 성능 비교
-- **데이터**: [Ai Hub 경구약제 이미지 데이터](https://aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&dataSetSn=576)  
+- **데이터**: [Ai Hub 경구약제 이미지 데이터](https://aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&dataSetSn=576)
+  
 ---
 
 ## 👥 팀 구성 및 역할
@@ -21,6 +22,7 @@
   | 박병현 | EDA&전처리 |
   | 오형주 | EDA&전처리 |
   | 진수경 | EDA&전처리 |
+  
 ---
 
 ## 🔧 설치 방법
@@ -58,6 +60,7 @@ pip install -r requirements.txt
 ```bash
 python main.py
 ```
+
 ---
 
 
@@ -80,6 +83,7 @@ pill-snap/
 ├── 📄 requirements.txt      # 필요한 라이브러리 목록
 ├── 📄 README.md           
 ```
+
 ---
 
 ## 📅 프로젝트 진행 과정
@@ -92,7 +96,7 @@ pill-snap/
   - 📉 VGGSSD: 0.35  
   - 📉 RetinaNet: 0.33  
   - ✅ YOLOv8: 0.86  
-👉 다른 모델의 경우 mAP함수의 문제나 오류 등의 이유로 점수가 낮은 경향이 있었, 프로젝트 기간상 오류를 전부 해결하기 힘들 것이라고 판단, 팀회의를 통해 YOLOv8모델을 베이스라인으로 잡는 것으로 합의
+👉 다른 모델의 경우 mAP함수의 문제나 오류 등의 이유로 점수가 낮은 경향이 있었음, 프로젝트 기간상 오류를 전부 해결하기 힘들 것이라고 판단, 팀회의를 통해 YOLOv8모델을 베이스라인으로 잡는 것으로 합의
 
 ### 🔹 2주차 – YOLOv8 + YOLOv12 실험
 #### 🧪 EDA & 전처리:
@@ -122,7 +126,7 @@ pill-snap/
       - 여러 augmentation chain을 무작위로 생성
       - chain들을 합성(Dirichlet 분포 기반 가중치) 후 원본 이미지와 섞음
       - 원본/증강본이 비슷한 embedding을 갖도록 학습
-  - 📘**용어 정리**
+  - **📘 용어 정리**
       - RL(Reinforcement Learning, 강화학습) 기반 탐색:
           - 강화학습 기반 탐색
           - 에이전트가 성능이 괜찮아 보이는 augmentation 조합을 제안 => 모델 학습 후 reward를 통해 성능점수를 주는 방법을 진행
@@ -135,24 +139,25 @@ pill-snap/
           - 원본 이미지와 증강본은 같은 클래스이므로, 모델이 출력하는 embedding이 비슷해지도록 추가적인 손실함수(Consistency Loss)사용
   - **실험결과**:
       - 세 옵션에 대해 mAP와 리더보드에 **큰 점수차이 없음**, 따라서 가장 빠른 **RandAugment를 적용**
+        
 ---
 
 ## 📊 실험 내용 및 결과
-### 베이스라인 실험
+### 🔧 베이스라인 실험
 - 사용모델: YOLOv12
 - 전처리: [Image resize(960)]
 - 결과(Kaggle Leaderboard): **0.965**
 - 예시 prediction Image:
 ![517](https://github.com/user-attachments/assets/0f60cc09-e990-487d-8427-44724d0597d3)
 
-### BBOX 겹침 문제 해결 실험
+### 🔧 BBOX 겹침 문제 해결 실험
 - 사용모델: YOLOv12
 - 전처리: [Image resize(960), bbox 겹침 문제 수동 라벨링]
 - 결과(Kaggle Leaderboard): **0.968**
 - 예시 prediction Image:
 ![517](https://github.com/user-attachments/assets/52600d3c-2b85-43e1-ad1e-9cb1aff7eec1)
 
-### 어노테이션 누락 pseudo-labeling 실험
+### 🔧 어노테이션 누락 pseudo-labeling 실험
 - 사용모델: YOLOv12
 - 전처리: [Image resize(960), annotation pseudo-labeling]
 - 결과(Kaggle Leaderboard): **0.976**
@@ -174,6 +179,4 @@ pill-snap/
 ### 향후계획
 - 현재 YOLOv8의 경우 카테고리id가 매치 되지 않는 등 문제가 발생하여 리더보드 점수가 찍히지 않고 있음
 - 빠른 개선을 통해 원래의 목적이었던 v8과 v12의 성능 차이를 확인할 수 있게 진행예정
-- EDA가 진행중에 있으므로 필요한 문제를 더 찾아 개선하고, 모델도 성능개선이 가능한 하이퍼파라미터 탐색 예정
-
-  
+- EDA가 진행중에 있으므로 필요한 문제를 더 찾아 개선하고, 모델도 성능개선이 가능한 하이퍼파라미터 탐색 예정 
