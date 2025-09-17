@@ -184,7 +184,7 @@ pill-snap/
 
 
 ## 참고자료
-- (Ultralytics)[https://docs.ultralytics.com/ko/modes/train/#introduction]
-- (AutoAugment: Learning Augmentation Policies from Data)[https://arxiv.org/abs/1805.09501]
-- (RandAugment: Practical automated data augmentation with a reduced search space)[https://arxiv.org/abs/1909.13719]
-- (AugMix: A Simple Data Processing Method to Improve Robustness and Uncertainty)[https://arxiv.org/abs/1912.02781]
+- [Ultralytics](https://docs.ultralytics.com/ko/modes/train/#introduction)
+- [AutoAugment: Learning Augmentation Policies from Data](https://arxiv.org/abs/1805.09501)
+- [RandAugment: Practical automated data augmentation with a reduced search space](https://arxiv.org/abs/1909.13719)
+- [AugMix: A Simple Data Processing Method to Improve Robustness and Uncertainty](https://arxiv.org/abs/1912.02781)
