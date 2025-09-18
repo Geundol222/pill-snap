@@ -6,7 +6,7 @@ def validation_score():
     model = YOLO('v12_runs/train/weights/best.pt')
 
     metrics = model.val(
-        data='../configs/yolo_data.yaml',
+        data='./configs/yolo_data.yaml',
         imgsz=960,
         project="v12_runs",
         seed=42,
@@ -21,7 +21,7 @@ def test_loop():
     model = YOLO('v12_runs/train/weights/best.pt')
 
     model.predict(
-        source="../data/test_images",
+        source="./data/test_images",
         imgsz=960,
         conf=0.25,
         save=True,

@@ -7,8 +7,8 @@ from PIL import Image
 
 def save_csv():
     pred_dir = "v12_runs/predict/labels"
-    img_dir = "../data/test_images"
-    out_csv = "../submissions/submission.csv"
+    img_dir = "./data/test_images"
+    out_csv = "./submissions/submission.csv"
 
     rows = []
     annotation_id = 1
@@ -62,7 +62,7 @@ def save_csv():
 
 
 def load_class_map():
-    anno_dir = "../data/train_annotations"
+    anno_dir = "./data/train_annotations"
     name2id = {}
 
     # 하위 모든 폴더 순회
@@ -77,7 +77,7 @@ def load_class_map():
                         name2id[cat["name"].strip()] = cat["id"]
 
     # yolo_data.yaml 불러오기
-    with open("../configs/yolo_data.yaml", "r", encoding="utf-8") as f:
+    with open("./configs/yolo_data.yaml", "r", encoding="utf-8") as f:
         yolo_cfg = yaml.safe_load(f)
     names = [n.strip() for n in yolo_cfg["names"]]
 

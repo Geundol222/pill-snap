@@ -75,7 +75,7 @@ def train():
     close_mosaic_ratio = int(epochs * 0.3)
 
     model.train(
-        data='../configs/yolo_data.yaml',
+        data='./configs/yolo_data_test.yaml',
         epochs=epochs,
         close_mosaic=close_mosaic_ratio,
         imgsz=960,  # 640
