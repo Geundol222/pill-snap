@@ -1,8 +1,33 @@
+import random
+import os
+from itertools import product
+
+import pandas as pd
 from ultralytics import YOLO
 
-def train():
+def train(epochs: int=50, random: bool=False, num_trials: int=5):
     """
-    Main 실행함수
+    Main train 함수
+
+    Args:
+        - epochs: 실행할 에폭 수
+        - random: Random Search 여부
+        - num_trials: Random Search 사용시, 몇개의 조합을 테스트할지 결정하는 변수
+
+    Description:
+        Random Search를 위한 함수와 일반 모델링 함수를 나눴습니다.
+    """
+
+    model = YOLO('yolo12s.pt')
+
+    if random:
+        random_search(model, epochs, num_trials)
+    else:
+        model_train(model, epochs)
+
+def model_train(model, epochs=50):
+    """
+    Model 실행함수
 
     Description:
         Yolo의 경우 augmentation이나 여러 전처리가 전부 라이브러리 안에 내장되어있고 학습시 알아서 전처리를 해주기때문에 편합니다.
@@ -28,50 +53,8 @@ def train():
             name="v12_train",   # 해당 작업이 어떤 작업인지를 명시해서 폴더링할 수도 있습니다. 이 기능은 사용자의 선택이지만, 기본적으로 train, val, predict의 폴더가 작업마다 생성되므로 꼭 필요한 파라미터는 아닙니다.
             exist_ok=True       # 이미 폴더가 있어도 덮어쓰기 허용
         )
-
-    ==========================================================================================================================================================================================================================
-    LHS:
-        가정:
-            - 에폭수 증가 실험
-            - 약들이 많이 기울어져 있는 경우가 있고, 약의 크기는 비슷하고 글자만 다른 약들이 존재하기때문에 Augmentation의 RandomAffine을 좀 강하게 걸어주고 실험 [degrees(회전범위), trainslate(이미지 이동), scale(확대 축소), shear(기울임)]
-            - 약들의 글자가 너무 흐릿하거나 알아볼 수 없는경우가 있음, hsv를 조절해서 약의 이미지를 조금 뚜렷하게 해보는 실험 [hsv_h(hue), hsv_s(saturation), hsv_v(value + constrast 혼합)]
-            - mixup을 사용하면 글씨 디테일을 망가뜨릴 수가 있기 때문에 데이터의 양을 고려해서 0.1~0.2 혹은 0.0으로 실험
-            - bbox의 누락이 문제가 되는 경우도 있으므로 cutmix를 진행할지, cutout을 진행할지, EDA의 결정을 따를지 고민
-            - 이미지의 resize 크기가 작아 약의 글씨 디테일을 살리지 못할수 있으므로, 이미지 resize 크기 키우기 [imgsz]
-
-        results:
-            - [No 전처리, No EDA] 5epochs => Validataion mAP@[0.75:0.95]: 0.7997302769703274(약 0.8)
-            - [No 전처리, No EDA] 30epochs => Validataion mAP@[0.75:0.95]: 0.87
-
-            RandomAffine:
-                - [degrees=120, translate=0.8, scale=0.8, shear=15] 30epochs => Validataion mAP@[0.75:0.95]: 0.73
-                - [degrees=120, shear=15] 30epochs => Validataion mAP@[0.75:0.95]: 0.80
-                - [degrees=60, shear=15] 30epochs => Validataion mAP@[0.75:0.95]: 0.81
-                - [degrees=45, shear=15] 30epochs => Validataion mAP@[0.75:0.95]: 0.83
-                - [degrees=30, shear=15] 30epochs => Validataion mAP@[0.75:0.95]: 0.79
-                => 각도를 바꾸는게 Yolo 기본설정보다 좋지 않은 선택인거 같으므로 각도 변경은 잠시 보류
-
-            Mixup:
-                - [mixup=0.0] 30epochs => Validataion mAP@[0.75:0.95]: 0.86
-                - [mixup=0.1] 30epochs => Validataion mAP@[0.75:0.95]: 0.87
-                - [mixup=0.2] 30epochs => Validataion mAP@[0.75:0.95]: 0.86
-                => mixup의 변경은 Yolo기본설정과 별 차이가 없음
-
-            HSV:
-                - [hsv_h=0.015, hsv_s=0.5, hsv_v=0.4] 30epochs => Validataion mAP@[0.75:0.95]: 0.87
-
-            Image Size:
-                - [imgsz=960, batch=4, nbs=16] 30epochs => Validataion mAP@[0.75:0.95]: 0.86
-                - [imgsz=960, batch=4, nbs=16, hsv_h=0.1, hsv_s=0.5, hsv_v=0.3] 30epochs => Validataion mAP@[0.75:0.95]: 0.86
-
-            결론:
-                - ultralytics이 제공하는 auto_augment옵션이 개인이 진행하는 augmentation 보다 뛰어나다는 결론에 도달하여, [AutoAugment, RandAugment, AugMix] 이 세가지의 옵션을 실험해보는 것을 다음사람에게 인계하기로함
-    ==========================================================================================================================================================================================================================
     """
-
-    model = YOLO('yolo12s.pt')
-
-    epochs = 50
+    
     close_mosaic_ratio = int(epochs * 0.3)
 
     model.train(
@@ -87,3 +70,89 @@ def train():
         seed=42,
         exist_ok=True
     )
+
+def random_search(model, epochs=50, num_trials=5):
+    """
+    Random_Search 함수
+
+    Description:        
+        이 함수에서 현재 서치를 통해 변경하고 있는 augmentation은 다음과 같습니다
+        - mixup_options = [0.0, 0.1, 0.2]
+        - mosaic_options = [0.0, 0.5, 1.0]
+        - cutmix_options = [0.0, 0.1, 0.3]
+        - copy_paste_options = [0.0, 0.1, 0.2]
+        - augment_options = ['autoaugment', 'augmix', 'randaugment']
+        - nbs_options = [8, 16, 32]
+        - lr0_options = [0.001, 0.003, 0.005]
+
+        num_trials는 몇개의 조합을 실험해 볼 지에 대한 변수입니다.
+
+        Random Search는 조합 실험용이기 때문에 이미지사이즈를 960에서 768로 줄였습니다.
+
+    """
+
+    close_mosaic_ratio = int(epochs * 0.3)
+
+    mixup_options = [0.0, 0.1, 0.2]
+    mosaic_options = [0.0, 0.5, 1.0]
+    cutmix_options = [0.0, 0.1, 0.3]
+    copy_paste_options = [0.0, 0.1, 0.2]
+    augment_options = ['autoaugment', 'augmix', 'randaugment']
+    nbs_options = [8, 16, 32]
+    lr0_options = [0.001, 0.003, 0.005]
+
+    search_space = list(product(mixup_options, mosaic_options, cutmix_options, copy_paste_options, augment_options, nbs_options, lr0_options))
+    num_trials = min(num_trials, len(search_space))
+    sampled_trials = random.sample(search_space, num_trials)
+
+    trial_results = []
+
+    for i, (mixup, mosaic, cutmix, copy_paste, augment, nbs, lr0) in enumerate(sampled_trials, 1):
+        trial_name = f"trial_{i}"
+        print(f'Random Trial {i}/{num_trials}: '
+            f'mixup={mixup}, mosaic={mosaic}, cutmix={cutmix}, copy_paste={copy_paste}, augment={augment}, nbs={nbs}, lr0={lr0}')
+        
+        model = YOLO('yolo12s.pt')
+
+        model.train(
+            data='./configs/yolo_data.yaml',
+            epochs=epochs,
+            close_mosaic=close_mosaic_ratio,
+            imgsz=768,
+            batch=4,
+            nbs=nbs,
+            auto_augment=augment,
+            mixup=mixup,
+            mosaic=mosaic,
+            cutmix=cutmix,
+            copy_paste=copy_paste,
+            lr0=lr0,
+            device=0,
+            project='v12_runs_random',
+            name=trial_name,
+            seed=42,
+            exist_ok=True
+        )
+
+        result_file = f'v12_runs_random/{trial_name}/results.csv'
+        if os.path.exists(result_file):        
+            df = pd.read_csv(result_file)
+            if "metrics/mAP50-95(B)" in df.columns:
+                final_map = df["metrics/mAP50-95(B)"].iloc[-1]
+            else:
+                final_map = df["metrics/mAP50(B)"].iloc[-1]  # fallback
+
+            # trial_name, mAP, 조합을 저장
+            trial_results.append((trial_name, final_map, {
+                "mixup": mixup,
+                "mosaic": mosaic,
+                "cutmix": cutmix,
+                "augment": augment,
+                "nbs": nbs,
+                "lr0": lr0
+            }))
+
+    if trial_results:
+        best_trial = max(trial_results, key=lambda x: x[1])
+        print(f"🏆 Best Trial: {best_trial[0]} with mAP50-95={best_trial[1]:.4f}")
+        print("   ⚙️ Best Params:", best_trial[2])
