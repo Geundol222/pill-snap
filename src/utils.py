@@ -15,7 +15,9 @@ def save_csv():
 
     # 🔑 매핑 불러오기
     class_map = load_class_map()
-
+    
+    id_to_name = {v: k for k, v in class_map.items()}
+    
     for label_file in os.listdir(pred_dir):
         if not label_file.endswith(".txt"):
             continue
@@ -62,7 +64,7 @@ def save_csv():
 
 
 def load_class_map():
-    anno_dir = "./data/train_annotations"
+    anno_dir = "./data/train_annotations_test"
     name2id = {}
 
     # 하위 모든 폴더 순회
@@ -72,9 +74,9 @@ def load_class_map():
                 continue
             with open(os.path.join(root, file), "r", encoding="utf-8") as f:
                 data = json.load(f)
-                if "categories" in data:
-                    for cat in data["categories"]:
-                        name2id[cat["name"].strip()] = cat["id"]
+                if "images" in data:
+                    for cat in data["images"]:
+                        name2id[cat["dl_name"].strip()] = cat["dl_idx"]
 
     # yolo_data.yaml 불러오기
     with open("./configs/yolo_data.yaml", "r", encoding="utf-8") as f:
