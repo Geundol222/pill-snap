@@ -6,6 +6,22 @@ from . import utils
 from pathlib import Path
 import shutil
 
+
+def validation_score():
+    model = YOLO('v12_runs/train/weights/best.pt')
+
+    metrics = model.val(
+        data='../configs/yolo_data.yaml',
+        imgsz=960,
+        project="v12_runs",
+        seed=42,
+        exist_ok=True
+    )
+
+    ap_75_95 = metrics.box.all_ap[:, 5:].mean()
+    print(f'mAP@[0.75:0.95] : {ap_75_95:.2f}')
+
+
 def enhance_pipeline(img_bgr):
     lab = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2LAB)
     l, a, b = cv2.split(lab)
