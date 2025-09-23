@@ -14,11 +14,11 @@
 ---
 
 ## 개인 협업일지 링크
-- [김진욱](./Personal/KJW/)
-- [박병현](./Personal/PBH/)
+- [김진욱](https://coal-sheet-752.notion.site/2770d71ee96980d6a8a9dde19e062d32?v=2770d71ee9698064a0e7000cc1b47e24&source=copy_link)
+- [박병현](https://famous-gorilla-33d.notion.site/AI-_-_-269c7c1a009280dfb556e494268ea975?source=copy_link)
 - [오형주](./Personal/OHJ/)
 - [이현석](./Personal/LHS/)
-- [진수경](./Personal/JSG/)
+- [진수경](https://puzzled-salto-827.notion.site/2696a4a5ec8380adb0bfd72fec737b86?v=2696a4a5ec8380fe9893000cccc037c7)
 - [함건희](./Personal/HKH/)
 
 ## 개인 실험 폴더
@@ -195,6 +195,7 @@ pill-snap/
 
 - 랜덤 서치를 이용하여 다양한 augmentation 실험
   - **실험 Parameter**:
+  
   | Parameters   | Cases                                |
   |--------------|--------------------------------------|
   | mixup        | [0.0, 0.1, 0.2]                      |
