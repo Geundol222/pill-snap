@@ -13,6 +13,9 @@
 
 ---
 
+## 팀 프로젝트 Notion링크
+- [링크](https://www.notion.so/AI_4-_5-26b2dfb1ef68806db489f167e90f7ec3?source=copy_link)
+
 ## 개인 협업일지 링크
 - [김진욱](https://coal-sheet-752.notion.site/2770d71ee96980d6a8a9dde19e062d32?v=2770d71ee9698064a0e7000cc1b47e24&source=copy_link)
 - [박병현](https://famous-gorilla-33d.notion.site/AI-_-_-269c7c1a009280dfb556e494268ea975?source=copy_link)
