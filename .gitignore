@@ -37,6 +37,8 @@ htmlcov/
 ===== 데이터/대용량 아티팩트 =====
 data/
 datasets/
+data_yolo/
+data_yolo_test/
 !data/README.md            # 데이터 설명만 추적(선택)
 !data/samples/**           # 샘플 소량만 추적하고 싶을 때(선택)
 *.zip
@@ -55,6 +57,8 @@ lightning_logs/
 wandb/
 mlruns/
 mlartifacts/
+v12_runs/
+v12_test_runs/
 *.pt
 *.ckpt
 *.onnx
