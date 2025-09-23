@@ -5,11 +5,12 @@ from itertools import product
 import pandas as pd
 from ultralytics import YOLO
 
-def train(epochs: int=50, random: bool=False, num_trials: int=5):
+def train(model_size: str='m', epochs: int=50, random: bool=False, num_trials: int=5):
     """
     Main train 함수
 
     Args:
+        - model_size: YOLO모델의 사이즈 [n, s, m] => l과 xl은 크기가 너무 커서 제외
         - epochs: 실행할 에폭 수
         - random: Random Search 여부
         - num_trials: Random Search 사용시, 몇개의 조합을 테스트할지 결정하는 변수
@@ -18,7 +19,9 @@ def train(epochs: int=50, random: bool=False, num_trials: int=5):
         Random Search를 위한 함수와 일반 모델링 함수를 나눴습니다.
     """
 
-    model = YOLO('yolo12s.pt')
+
+
+    model = YOLO(f'yolo12{model_size}.pt')
 
     if random:
         random_search(model, epochs, num_trials)
@@ -64,7 +67,8 @@ def model_train(model, epochs=50):
         imgsz=960,  # 640
         batch=4,    # 16
         nbs=16,     # nbs: 배치는 4인데 16의 효과를 주기위해 epoch마다 backward하는게 아니라 4번마다 한번 한다
-        auto_augment='randaugment', # 'randaugment'는 기본값 'autoaugment'또는 'augmix'
+        auto_augment='autoaugment', # 'randaugment'는 기본값 'autoaugment'또는 'augmix'
+        cache=False,
         device=0,
         project="v12_runs",
         seed=42,
@@ -128,6 +132,7 @@ def random_search(model, epochs=50, num_trials=5):
             copy_paste=copy_paste,
             lr0=lr0,
             device=0,
+            workers=0,
             project='v12_runs_random',
             name=trial_name,
             seed=42,

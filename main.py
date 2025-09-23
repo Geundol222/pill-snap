@@ -7,9 +7,9 @@ def main():
     rcParams['font.family'] = 'Malgun Gothic'
     rcParams['axes.unicode_minus'] = False
 
-    train.train(epochs=20, random=True, num_trials=15)
-    # infer.validation_score()
-    # infer.test_loop()
+    train.train(epochs=50, random=False)
+    infer.validation_score()
+    infer.test_loop()
 
 if __name__ == "__main__":
     main()
