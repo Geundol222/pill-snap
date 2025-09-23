@@ -199,15 +199,15 @@ pill-snap/
 - 랜덤 서치를 이용하여 다양한 augmentation 실험
   - **실험 Parameter**:
   
-  | Parameters   | Cases                                |
-  |--------------|--------------------------------------|
-  | mixup        | [0.0, 0.1, 0.2]                      |
-  | mosaic       | [0.0, 0.5, 1.0]                      |
-  | cutmix       | [0.0, 0.1, 0.3]                      |
-  | copy_paste   | [0.0, 0.1, 0.2]                      |
-  | augment      | ['autoaugment', 'augmix', 'randaugment'] |
-  | nbs          | [8, 16, 32]                          |
-  | lr0          | [0.001, 0.003, 0.005]                |
+    | Parameters   | Cases                                |
+    |--------------|--------------------------------------|
+    | mixup        | [0.0, 0.1, 0.2]                      |
+    | mosaic       | [0.0, 0.5, 1.0]                      |
+    | cutmix       | [0.0, 0.1, 0.3]                      |
+    | copy_paste   | [0.0, 0.1, 0.2]                      |
+    | augment      | ['autoaugment', 'augmix', 'randaugment'] |
+    | nbs          | [8, 16, 32]                          |
+    | lr0          | [0.001, 0.003, 0.005]                |
 
   - **실험결과**:
     | Rank | Trial ID  | Best Epoch | mAP@[0.50:0.95] |
