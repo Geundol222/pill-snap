@@ -13,6 +13,9 @@
 
 ---
 
+## 프로젝트 보고서
+- [Uploading 5팀_프로젝트 보고서.pdf…]()
+
 ## 팀 프로젝트 Notion링크
 - [링크](https://coal-sheet-752.notion.site/_AI-4-5-2770d71ee9698043b590c63f18ba22ea)
 
