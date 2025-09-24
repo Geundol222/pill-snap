@@ -14,7 +14,7 @@
 ---
 
 ## 팀 프로젝트 Notion링크
-- [링크](https://www.notion.so/AI_4-_5-26b2dfb1ef68806db489f167e90f7ec3?source=copy_link)
+- [링크](https://coal-sheet-752.notion.site/_AI-4-5-2770d71ee9698043b590c63f18ba22ea)
 
 ## 개인 협업일지 링크
 - [김진욱](https://coal-sheet-752.notion.site/2770d71ee96980d6a8a9dde19e062d32?v=2770d71ee9698064a0e7000cc1b47e24&source=copy_link)
@@ -22,7 +22,7 @@
 - [오형주](https://rose-laugh-280.notion.site/AI-09-09-09-24-2778de3ce62b80079a87e7926bbc98c5?source=copy_link)
 - [이현석](https://www.notion.so/Codeit-2252dfb1ef688054a879c45c276e8d85?source=copy_link)
 - [진수경](https://puzzled-salto-827.notion.site/2696a4a5ec8380adb0bfd72fec737b86?v=2696a4a5ec8380fe9893000cccc037c7)
-- [함건희](./Personal/HKH/)
+- [함건희](https://nostalgic-apricot-f75.notion.site/277fd289d4ef809880e8eef10d388fd3?v=277fd289d4ef8168aa96000c6c160de3&source=copy_link)
 
 ## 개인 실험 폴더
 - [김진욱](./Personal/KJW/)
