@@ -20,7 +20,7 @@
 - [김진욱](https://coal-sheet-752.notion.site/2770d71ee96980d6a8a9dde19e062d32?v=2770d71ee9698064a0e7000cc1b47e24&source=copy_link)
 - [박병현](https://famous-gorilla-33d.notion.site/AI-_-_-269c7c1a009280dfb556e494268ea975?source=copy_link)
 - [오형주](https://rose-laugh-280.notion.site/AI-09-09-09-24-2778de3ce62b80079a87e7926bbc98c5?source=copy_link)
-- [이현석](https://www.notion.so/Codeit-2252dfb1ef688054a879c45c276e8d85?source=copy_link)
+- [이현석](https://bubbly-psychology-181.notion.site/Codeit-2252dfb1ef688054a879c45c276e8d85?source=copy_link)
 - [진수경](https://puzzled-salto-827.notion.site/2696a4a5ec8380adb0bfd72fec737b86?v=2696a4a5ec8380fe9893000cccc037c7)
 - [함건희](https://nostalgic-apricot-f75.notion.site/277fd289d4ef809880e8eef10d388fd3?v=277fd289d4ef8168aa96000c6c160de3&source=copy_link)
 
